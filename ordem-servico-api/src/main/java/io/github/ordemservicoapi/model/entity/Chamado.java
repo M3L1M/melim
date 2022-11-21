@@ -63,8 +63,7 @@ public class Chamado {
 	@Column(name="id_cliente")
 	private Integer cliente;
 	
-	@Column(name="preco")
-	@Convert(converter=Jsr310JpaConverters.LocalDateConverter.class)
+	@Column(name="preco",precision = 20,scale = 2)
 	private BigDecimal preco;
 	
 }

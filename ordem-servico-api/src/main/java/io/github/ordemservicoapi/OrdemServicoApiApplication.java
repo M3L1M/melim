@@ -2,9 +2,10 @@ package io.github.ordemservicoapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class OrdemServicoApiApplication {
+public class OrdemServicoApiApplication extends SpringBootServletInitializer{
 
 	public static void main(String[] args) {
 		SpringApplication.run(OrdemServicoApiApplication.class, args);

@@ -1,18 +1,24 @@
 package io.github.ordemservicoapi.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.HttpStatus.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.github.ordemservicoapi.exception.ErroRegraNegocioException;
 import io.github.ordemservicoapi.model.entity.Chamado;
 import io.github.ordemservicoapi.model.repository.ChamadoRepository;
 import io.github.ordemservicoapi.service.ChamadoService;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+@AllArgsConstructor
 @Service
 public class ChamadoServiceImpl implements ChamadoService {
 	
@@ -25,21 +31,36 @@ public class ChamadoServiceImpl implements ChamadoService {
 	}
 
 	@Override
+	@Transactional
 	public Chamado save(Chamado chamado) {
 		autentica(chamado); 
+		chamado.setData(LocalDate.now());
+		chamado.setHora(LocalTime.now());
+		
 		return repository.save(chamado);
 	}
 
 	@Override
-	public Chamado update(Integer id, Chamado chamado) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public void update(Integer id, Chamado chamado) {
+		repository
+			.findById(id)
+			.map(entity -> {
+				entity.setDescricao(chamado.getDescricao());
+				entity.setStatus(chamado.getStatus());
+				entity.setSituacao(chamado.getSituacao());
+				entity.setDataPrevista(chamado.getDataPrevista());
+				entity.setPreco(chamado.getPreco());
+				return entity;
+			}).orElseThrow(()-> new ErroRegraNegocioException("Ordem de Serviço não encontrado"));
 	}
 
 	@Override
-	public Chamado delete(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public void delete(Integer id) {
+		Chamado chamado=repository
+				.findById(id).orElseThrow(()->new ErroRegraNegocioException("Ordem de Serviço não encontrado"));
+		repository.delete(chamado);
 	}
 
 	@Override

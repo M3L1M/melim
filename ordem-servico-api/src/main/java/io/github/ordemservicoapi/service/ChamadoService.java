@@ -8,8 +8,8 @@ public interface ChamadoService {
 	List<Chamado> list();
 	Chamado save(Chamado chamado);
 	void autentica(Chamado chamado);
-	Chamado update(Integer id,Chamado chamado);
-	Chamado delete(Integer id);
+	void update(Integer id,Chamado chamado);
+	void delete(Integer id);
 	
 	Chamado obterChamadoPorId(Integer id);
 }
